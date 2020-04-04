@@ -1,0 +1,62 @@
+kind: Deployment
+apiVersion: apps/v1beta1
+metadata:
+  name: ita-azure-aks-demo
+  namespace: mdsnamespace
+  labels:
+    app: ita-azure-aks-demo
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: ita-azure-aks-demo
+    spec:
+      containers:
+        - name: ita-azure-aks-demo
+          image: itadevacr.azurecr.io/ita-azure-aks-demo:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: ita-azure-aks-demo
+  namespace: mdsnamespace
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+  selector:
+    app: ita-azure-aks-demo
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: ita-azure-aks-demo
+  namespace: mdsnamespace
+spec:
+  rules:
+    - host: aks-demo-itadev2.vangos-cloudapp.us
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: ita-azure-aks-demo
+              servicePort: 8080
+  tls:
+    - hosts:
+        - aks-demo-itadev2.vangos-cloudapp.us
+      secretName: tls-secret
