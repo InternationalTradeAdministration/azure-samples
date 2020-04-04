@@ -1,6 +1,6 @@
 version: '3'
 services:
-  ita-dataloader:
+  azure-aks-sample:
     image: itadevacr.azurecr.io/ita-azure-aks-demo:latest
     build:
       context: .

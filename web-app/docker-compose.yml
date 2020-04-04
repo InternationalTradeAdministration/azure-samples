@@ -1,0 +1,7 @@
+version: '3'
+services:
+  azure-webapp-sample:
+    image: dataservices.azurecr.io/ita-azure-app-service-demo:latest
+    build:
+      context: .
+      dockerfile: Dockerfile

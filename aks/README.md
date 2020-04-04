@@ -1,4 +1,4 @@
-# Demo Application Deployment to Azure Kubernetes Service
+# Azure Kubernetes Services Demo
 
 A sample SpringBoot application in Kotlin. The stack doesn't matter for this demo
 
@@ -15,11 +15,9 @@ building & deploying locally if you intend on using Azure DevOps (CI/CD); the Az
 
 ### Azure
 
-- Azure Resource Group
-- Azure Container Registry
 - DNS Zone configured with a domain
 - AKS Cluster with the following:
-  - A namespace for the application to live in; for this demo it's: **mdsnamespace**
+  - A namespace for the application to live in
   - [Ingress Controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic)
   - [External DNS for Kubernetes](https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/azure.md)
 - You may skip installing External DNS for Kubernetes, but you'll need to manually configure a DNS Zone
@@ -29,38 +27,47 @@ building & deploying locally if you intend on using Azure DevOps (CI/CD); the Az
 
 ### Build
 
+```shell script
 gradle build
+```
 
 ### Build Docker Image
 
-The following environment variables are needed for this script:
+The following variables are needed for this script:
 
-- AZURE_CONTAINER_USER: The name of the azure container registry
-- AZURE_CONTAINER_KEY: The access key to the azure container registry
+- ACR User Name: The name of the azure container registry
+- ACR Key: The access key to the azure container registry
 
 ```shell script
-sudo docker login $AZURE_CONTAINER_USER.azurecr.io -u $AZURE_CONTAINER_USER -p $AZURE_CONTAINER_KEY
-sudo docker build -t $AZURE_CONTAINER_USER.azurecr.io/ita-azure-aks-demo .
-sudo docker push $AZURE_CONTAINER_USER.azurecr.io/ita-azure-aks-demo:latest
+sudo docker login <acr-username>.azurecr.io -u <acr-username> -p <acr-key>
+sudo docker build -t <acr-username>.azurecr.io/ita-azure-aks-demo .
+sudo docker push <acr-username>.azurecr.io/ita-azure-aks-demo:latest
 ```
 
 ### Deploy to AKS
 
+The following variables are needed for this script:
+
+- Azure Resource Group
+- Kuberneted Namespace
+
 ```shell script
-kubectl delete deployment,service,ingress ita-azure-aks-demo -n mdsnamespace --ignore-not-found
-kubectl apply -f kube-config.yml -n mdsnamespace
+kubectl delete deployment,service,ingress ita-azure-aks-demo -n <k8-namespace> --ignore-not-found
+kubectl apply -f kube-config.yml -n <k8-namespace>
 ```
 
 ### Browse Kubernetes Cluster
 
 ```shell script
-az aks browse --resource-group <azure-resource-group> --name <aks-cluster-name>
+az aks browse --resource-group <resource-group> --name <cluster-name>
 ```
-
-When deployed successfully, the follow API will return a 'Hello World':
-<https://aks-demo-itadev2.vangos-cloudapp.us/api/hello-world>
 
 ## Build and Deploy from Azure DevOps (CI/CD)
 
-The file azure-pipeline.yml has the minimum required steps for building the application within a CI pipeline.
-Prior to being used, it needs to be updated with the appropriate service connections and container registry.
+The file azure-pipeline.yml has the minimum required steps for building the application within a CI pipeline for deployment to AKS (including running tests). Prior to being used, it needs to be updated with the appropriate service connection and container registry.
+
+Creating build and release pipelines may be done through the Azure DevOps portal.
+
+When deployed successfully, the following API will return 'Hello World':
+
+<https://aks-demo-itadev2.vangos-cloudapp.us/api/hello-world>

@@ -1,0 +1,34 @@
+trigger:
+  - master
+
+pool:
+  vmImage: 'ubuntu-16.04'
+
+steps:
+  - task: DockerCompose@0
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: 'ITADEV2-MSDataServicesAzure'
+      azureContainerRegistry: '{"loginServer":"dataservices.azurecr.io", "id" : "/subscriptions/675d7977-79af-4b94-b0bd-26d4095a4ffb/resourceGroups/ITA-MSDataServices-Dev-East1/providers/Microsoft.ContainerRegistry/registries/dataservices"}'
+      dockerComposeFile: '**/web-app/docker-compose.yml'
+      action: 'Build services'
+      additionalImageTags: '$(Build.BuildId)'
+    displayName: 'Build Docker image'
+  - task: DockerCompose@0
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: 'ITADEV2-MSDataServicesAzure'
+      azureContainerRegistry: '{"loginServer":"dataservices.azurecr.io", "id" : "/subscriptions/675d7977-79af-4b94-b0bd-26d4095a4ffb/resourceGroups/ITA-MSDataServices-Dev-East1/providers/Microsoft.ContainerRegistry/registries/dataservices"}'
+      dockerComposeFile: '**/web-app/docker-compose.yml'
+      action: 'Push services'
+      additionalImageTags: '$(Build.BuildId)'
+    displayName: 'Push Docker image'
+  - task: AzureRmWebAppDeployment@4
+    inputs:
+      ConnectionType: 'AzureRM'
+      azureSubscription: 'ITA_Development(675d7977-79af-4b94-b0bd-26d4095a4ffb)'
+      appType: 'webAppContainer'
+      WebAppName: 'web-app-demo-itadev2'
+      DockerNamespace: 'dataservices'
+      DockerRepository: 'ita-azure-app-service-demo'
+      DockerImageTag: 'latest'

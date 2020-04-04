@@ -1,0 +1,10 @@
+{
+  "name": "azure-web-service-sample",
+  "version": "1.0.0",
+  "description": "A sample Node application server.",
+  "author": "Vango <evangelos.poenres@trade.gov>",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.16.1"
+  }
+}
