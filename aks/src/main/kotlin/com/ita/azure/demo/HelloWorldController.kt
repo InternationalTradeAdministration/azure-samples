@@ -8,6 +8,6 @@ class HelloWorldController {
 
     @GetMapping("/api/hello-world")
     fun sayHelloWorld(): String {
-        return "Hello World! This is Vango."
+        return "Hello World"
     }
 }
