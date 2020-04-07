@@ -23,13 +23,3 @@ steps:
       action: 'Push services'
       additionalImageTags: '$(Build.BuildId)'
     displayName: 'Push Docker image'
-  - task: AzureAppServiceManage@0
-    inputs:
-      azureSubscription: 'ITADEV2-MSDataServicesAzure'
-      Action: 'Stop Azure App Service'
-      WebAppName: 'web-app-demo-itadev2'  
-  - task: AzureAppServiceManage@0
-    inputs:
-      azureSubscription: 'ITADEV2-MSDataServicesAzure'
-      Action: 'Start Azure App Service'
-      WebAppName: 'web-app-demo-itadev2'

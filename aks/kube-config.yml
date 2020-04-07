@@ -23,6 +23,11 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+          - name: SAMPLE_VAR
+            value: "JOHN_WICK"
+          - name: BUILD_ID
+            value: "#{Release.Artifacts._InternationalTradeAdministration.azure-samples-aks.BuildId}#"
       restartPolicy: Always
 ---
 

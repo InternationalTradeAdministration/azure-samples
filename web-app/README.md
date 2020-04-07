@@ -58,12 +58,30 @@ az webapp config container set -n web-app-demo-itadev2 -g <resource-group> --doc
 az webapp start -n web-app-demo-itadev2 -g <resource-group>
 ```
 
+### Environment Variables
+
+Some applications may need environment variables; see that projects README for guidance.
+To add environment variables via the Azure CLI:
+
+```shell script
+➜  ~ az webapp config appsettings set -n web-app-demo-itadev2 -g <resource-group> --settings SAMPLE_VAR=john_wick
+```
+
+For automated deployments, included them in the CI Configuration. For more information see this [documentation](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureAppServiceSettingsV1/README.md).
+
 ## Build and Deploy from Azure DevOps (CI/CD)
 
 The file azure-pipeline.yml has the minimum required steps for building the application within a CI pipeline for deployment as an  App Service. Prior to being used, it needs to be updated with the appropriate service connection and container registry.
 
 Creating build and release pipelines may be done through the Azure DevOps portal.
 
+A Service Principle should be used for automated deployments and it needs to have:
+
+- AcrPull permissions on the Container Registry
+- Contributor permissions to the Resource Group
+
 When deployed successfully, the following API will return 'Hello World':
 
 <https://web-app-demo-itadev2.azurewebsites.net/api/hello-world>
+
+## Best Practices

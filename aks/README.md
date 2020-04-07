@@ -62,11 +62,21 @@ kubectl apply -f kube-config.yml -n <k8-namespace>
 az aks browse --resource-group <resource-group> --name <cluster-name>
 ```
 
+### Environment Variables
+
+Some applications may need environment variables; see that projects README for guidance.
+For automated deployments, variables will need to be included as hardcoded values, or as tokens in the kube-config.yml. Use tokens for access keys that need to remain private. There are some examples in this project, for more information see this [documentation](https://github.com/qetza/vsts-replacetokens-task#readme).
+
 ## Build and Deploy from Azure DevOps (CI/CD)
 
 The file azure-pipeline.yml has the minimum required steps for building the application within a CI pipeline for deployment to AKS (including running tests). Prior to being used, it needs to be updated with the appropriate service connection and container registry.
 
 Creating build and release pipelines may be done through the Azure DevOps portal.
+
+A Service Principle should be used for automated deployments and it needs to have:
+
+- AcrPull permissions on the Container Registry
+- Contributor permissions to the Resource Group
 
 When deployed successfully, the following API will return 'Hello World':
 
