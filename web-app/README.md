@@ -56,7 +56,10 @@ az appservice plan create -g <resource-group> -n sample-web-app-plan --sku F1 --
 az webapp create -g <resource-group> -n web-app-demo-itadev2 -p sample-web-app-plan -i <acr-username>.azurecr.io/ita-azure-app-service-demo:latest
 az webapp config container set -n web-app-demo-itadev2 -g <resource-group> --docker-custom-image-name <acr-username>.azurecr.io/ita-azure-app-service-demo:latest --docker-registry-server-url https://<azure-container-registry-name>.azurecr.io --docker-registry-server-user <registry-username> --docker-registry-server-password <acr-key>
 az webapp start -n web-app-demo-itadev2 -g <resource-group>
+az webapp identity assign -g <resource-group> -n web-app-demo-itadev2
 ```
+
+**Note:** The app identity created in the last command needs to be granted acrPull permissions to the container registry
 
 ### Environment Variables
 
