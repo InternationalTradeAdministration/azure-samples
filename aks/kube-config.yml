@@ -61,6 +61,13 @@ spec:
             backend:
               serviceName: ita-azure-aks-demo
               servicePort: 8080
+    - host: aks-demo.itadev2.vangos-cloudapp.us
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: ita-azure-aks-demo
+              servicePort: 8080
   tls:
     - hosts:
         - aks-demo-itadev2.vangos-cloudapp.us
